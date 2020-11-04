@@ -7,9 +7,7 @@ import cromwell.core.path.Path
 object DefaultIoCommand {
   case class DefaultIoCopyCommand(override val source: Path,
                                   override val destination: Path,
-                                  override val overwrite: Boolean) extends IoCopyCommand(
-    source, destination, overwrite
-  )
+                                 ) extends IoCopyCommand(source, destination)
   case class DefaultIoContentAsStringCommand(override val file: Path, override val options: IoReadOptions) extends IoContentAsStringCommand(file, options)
   case class DefaultIoSizeCommand(override val file: Path) extends IoSizeCommand(file)
   case class DefaultIoWriteCommand(override val file: Path,

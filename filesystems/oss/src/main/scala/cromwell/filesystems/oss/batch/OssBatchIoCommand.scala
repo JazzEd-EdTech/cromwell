@@ -2,9 +2,7 @@ package cromwell.filesystems.oss.batch
 
 import com.aliyun.oss.OSSException
 import com.aliyun.oss.model._
-
 import com.google.api.client.http.HttpHeaders
-
 import cromwell.core.io._
 import cromwell.filesystems.oss._
 
@@ -44,8 +42,8 @@ sealed trait OssBatchIoCommand[T, U] extends IoCommand[T] {
 case class OssBatchCopyCommand(
                                 override val source: OssPath,
                                 override val destination: OssPath,
-                                override val overwrite: Boolean
-                              ) extends IoCopyCommand(source, destination, overwrite) with OssBatchIoCommand[Unit, CopyObjectResult] {
+                              )
+  extends IoCopyCommand(source, destination) with OssBatchIoCommand[Unit, CopyObjectResult] {
   override def operation: GenericResult = {
     val getObjectRequest = new CopyObjectRequest(source.bucket, source.key, destination.bucket, destination.key)
     // TODO: Copy other attributes (encryption, metadata, etc.)
@@ -60,7 +58,7 @@ case class OssBatchDeleteCommand(
                                  override val file: OssPath,
                                  override val swallowIOExceptions: Boolean
                                ) extends IoDeleteCommand(file, swallowIOExceptions) with OssBatchIoCommand[Unit, Void] {
-  def operation = file.ossClient.deleteObject(file.bucket, file.key)
+  def operation: Unit = file.ossClient.deleteObject(file.bucket, file.key)
   override protected def mapOssResponse(response: Void): Unit = ()
 }
 
